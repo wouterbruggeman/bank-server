@@ -7,7 +7,7 @@ Db::Db() :
 	if (err.type() == QSqlError::NoError) {
 		m_connected = true;
 #ifdef DEBUG
-		printf("Db, connected to the database..\n\n");
+		printf("Db, connected to the database..\n");
 #endif
 	}
 #ifdef DEBUG
