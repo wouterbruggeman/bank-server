@@ -15,5 +15,7 @@ VPATH += ./src/
 
 QT = core sql network
 
-HEADERS
-SOURCES += main.cpp
+HEADERS += \
+	db.h
+SOURCES += main.cpp \
+	db.cpp
