@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 
 #include "db.h"
+#include "iban.h"
 #include "log.h"
 
 int main(int argc, char *argv[]){
@@ -10,6 +11,8 @@ int main(int argc, char *argv[]){
 
 	// Log *log = new Log();
 	// log->newLog(Log::LOGIN, "test log", 1);
+
+	// printf("%d\n", Iban::isValid("nl43 INGB 0756 7136 09"));
 
 	return app.exec();
 }

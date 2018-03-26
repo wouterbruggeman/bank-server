@@ -17,7 +17,9 @@ QT = core sql network
 
 HEADERS += \
 	db.h \
+	iban.h \
 	log.h
 SOURCES += main.cpp \
 	db.cpp \
+	iban.cpp \
 	log.cpp
