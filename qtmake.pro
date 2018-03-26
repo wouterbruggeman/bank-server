@@ -1,3 +1,13 @@
+CONFIG += debug
+
+CONFIG(debug, debug|release) {
+	message( "~debug~" )
+	DEFINES += DEBUG
+}
+CONFIG(release, debug|release) {
+	message( "~release~" )
+}
+
 TEMPLATE = app
 TARGET = server
 
