@@ -5,5 +5,7 @@ VPATH += ./src/
 
 QT = core sql network
 
-HEADERS
-SOURCES += main.cpp
+HEADERS += \
+	tcpsocket.h
+SOURCES += main.cpp \
+	tcpsocket.cpp
