@@ -3,21 +3,26 @@
 #include "iban.h"
 
 Iban::Iban() {
+	m_countryLength.insert("NL", 18);
 }
 
 Iban::~Iban() {
 }
 
+void Iban::format(QString &iban) {
+	iban = iban.toUpper();
+	iban.replace(" ", "");
+}
+
 bool Iban::isValid(QString iban) {
 	bool valid = true;
 
-	iban = iban.toUpper();
-	iban.replace(" ", "");
+	format(iban);
 
 	int size = iban.size();
 
 	// Length check
-	if (size != 18) {
+	if (m_countryLength[iban.left(2)] != iban.size()) {
 		valid = false;
 	}
 

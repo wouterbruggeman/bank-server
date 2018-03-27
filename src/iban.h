@@ -1,6 +1,8 @@
 #ifndef IBAN_H
 #define IBAN_H
 
+#include <QHash>
+
 class Iban
 {
 
@@ -8,10 +10,12 @@ public:
 	Iban();
 	~Iban();
 
-	static bool isValid(QString iban);
-	static int modulo97(QString bigInt);
+	void format(QString &iban);
+	bool isValid(QString iban);
+	int modulo97(QString bigInt);
 
 private:
+	QHash<QString, char> m_countryLength;
 
 };
 

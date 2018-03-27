@@ -12,7 +12,8 @@ int main(int argc, char *argv[]){
 	// Log *log = new Log();
 	// log->newLog(Log::LOGIN, "test log", 1);
 
-	// printf("%d\n", Iban::isValid("nl43 INGB 0756 7136 09"));
+	Iban *iban = new Iban();
+	printf("%d\n", iban->isValid("nl43 INGB 0756 7136 09"));
 
 	return app.exec();
 }
