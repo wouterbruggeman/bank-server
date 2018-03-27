@@ -49,7 +49,7 @@ int Iban::calculateCheckDigit(QString countryCode, QString number) {
 
 	QString ibanInt = convertIbanToNumber(countryCode + "00" + number);
 
-	return 98 -	modulo97(ibanInt);
+	return 98 - modulo97(ibanInt);
 }
 
 QString Iban::convertIbanToNumber(QString iban) {
