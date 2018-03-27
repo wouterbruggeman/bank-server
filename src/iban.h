@@ -12,6 +12,8 @@ public:
 
 	void format(QString &iban);
 	bool isValid(QString iban);
+	int calculateCheckDigit(QString countryCode, QString number);
+	QString convertIbanToNumber(QString iban);
 	int modulo97(QString bigInt);
 
 private:
