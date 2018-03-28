@@ -2,23 +2,19 @@
 #define TCPSOCKET_H
 
 #include <QTcpSocket>
+#include <QObject>
 
-class TcpSocket : public QObject
-{
-	Q_OBJECT
+class TCPSocket : public QTcpSocket{
 
-public:
-	explicit TcpSocket(QObject *parent = 0);
-	~TcpSocket();
+	public:
+		explicit TCPSocket(QObject *parent = 0);
+		~TCPSocket();
 
-public slots:
-	void connected();
-	void disconnected();
-	void bytesWritten(qint64);
-	void readyRead();
-
-protected:
-	QTcpSocket *m_socket;
+	public slots:
+		void connected();
+		void disconnected();
+		void bytesWritten(qint64);
+		void readyRead();
 
 };
 

@@ -1,6 +1,4 @@
-#include "TCPConnection.h"
-
-#include <QNetwork>
+#include "tcpconnection.h"
 
 TCPConnection::TCPConnection(int socketDescriptor, QObject *parent) 
 	: QThread(parent), socketDescriptor(socketDescriptor){

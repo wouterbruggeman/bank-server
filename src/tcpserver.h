@@ -9,9 +9,10 @@ class TCPServer : public QTcpServer{
 
 	public:
 		TCPServer(QObject *parent = 0);
+		void start(int port);
 
 	protected:
 		void incomingConnection(qintptr socketDescriptor) override;
-}
+};
 
 #endif
