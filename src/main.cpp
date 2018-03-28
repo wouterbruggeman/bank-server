@@ -1,5 +1,6 @@
 #include <QCoreApplication>
 #include <QDebug>
+#include <QThread>
 #include "tcpserver.h"
 #include "tcpsocket.h"
 #include "transactionhandler.h"
@@ -16,10 +17,15 @@ int main(int argc, char *argv[]){
 		qDebug() << "Server started.";
 	}
 
-	TcpSocket *socket = new TcpSocket();
+	//TcpSocket *socket = new TcpSocket();
 	
 	Db *db = new Db();
-	TransactionHandler t(db);
+
+	QThread *transactionThread = new QThread;
+	transactionThread->start();
+
+	TransactionHandler transactionHandler(db);
+	transactionHandler.moveToThread(transactionThread);
 
 	//Config c(db);
 	//c.setValue("settingname", 25);

@@ -1,0 +1,1 @@
+INSERT INTO config (setting,value) VALUES('transaction_delay', 5000);
