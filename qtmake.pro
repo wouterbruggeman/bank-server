@@ -18,11 +18,13 @@ HEADERS += \
 	iban.h \
 	log.h \
 	tcpserver.h \
-	tcpsocket.h
+	tcpsocket.h \
+	tcptask.h
 SOURCES += \
 	main.cpp \
 	db.cpp \
 	iban.cpp \
 	log.cpp \
 	tcpserver.cpp \
-	tcpsocket.cpp
+	tcpsocket.cpp \
+	tcptask.cpp

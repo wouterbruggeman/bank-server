@@ -10,12 +10,16 @@ class TcpSocket : public QObject
 public:
 	explicit TcpSocket(QObject *parent = 0);
 	~TcpSocket();
+	void setSocket(qintptr descriptor);
+
+signals:
 
 public slots:
 	void connected();
 	void disconnected();
 	void bytesWritten(qint64);
 	void readyRead();
+	void slotResult(int);
 
 protected:
 	QTcpSocket *m_socket;

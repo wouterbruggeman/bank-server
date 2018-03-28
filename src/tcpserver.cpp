@@ -1,17 +1,25 @@
+#include <QTcpSocket>
+
 #include "tcpserver.h"
+#include "tcpsocket.h"
 
-TCPServer::TCPServer(QObject *parent) : QTcpServer(parent){
+TcpServer::TcpServer(QObject *parent) :
+	QTcpServer(parent)
+{
 }
 
-void TCPServer::start(int port){
-	this->listen(QHostAddress::Any, port);
+void TcpServer::start(int port){
+#ifdef DEBUG
+	if (this->listen(QHostAddress::Any, port)) {
+		printf("Server started..\n");
+	}
+	else {
+		printf("Server did not start..\n");
+	}
+#endif
 }
 
-void TCPServer::incomingConnection(qintptr socketDescriptor){
-
-	qDebug() << "New connection!";
-	/*
-	TCPConnection *thread new TCPConnection(socketDescriptor, this);
-	connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-	thread->start();*/
+void TcpServer::incomingConnection(qintptr descriptor) {
+	TcpSocket *socket = new TcpSocket(this);
+	socket->setSocket(descriptor);
 }

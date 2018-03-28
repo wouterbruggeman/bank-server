@@ -3,16 +3,17 @@
 
 #include <QTcpServer>
 
-
-class TCPServer : public QTcpServer{
+class TcpServer : public QTcpServer
+{
 	Q_OBJECT
 
-	public:
-		TCPServer(QObject *parent = 0);
-		void start(int port);
+public:
+	TcpServer(QObject *parent = 0);
+	void start(int port);
 
-	protected:
-		void incomingConnection(qintptr socketDescriptor) override;
+protected:
+	void incomingConnection(qintptr descriptor) override;
+
 };
 
 #endif

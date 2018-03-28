@@ -1,22 +1,16 @@
 #include <QCoreApplication>
 #include <QDebug>
+
 #include "tcpserver.h"
 #include "tcpsocket.h"
-
-
 
 int main(int argc, char *argv[]){
 	QCoreApplication app(argc, argv);
 
-	TCPServer *server = new TCPServer();
+	TcpServer *server = new TcpServer();
 	server->start(1234);
-	if(!server->isListening()){
-		qDebug() << "Server not started..";
-	}else{
-		qDebug() << "Server started.";
-	}
 
-	TcpSocket *socket = new TcpSocket();
+	// TcpSocket *socket = new TcpSocket();
 
 
 	/*Db *db = new Db();
