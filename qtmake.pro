@@ -20,6 +20,7 @@ HEADERS += \
 	tcpserver.h \
 	tcpsocket.h \
 	transaction.h \
+	transactionhandler.h \
 	config.h
 SOURCES += \
 	main.cpp \
@@ -29,4 +30,5 @@ SOURCES += \
 	tcpserver.cpp \
 	tcpsocket.cpp \
 	transaction.cpp \
+	transactionhandler.cpp \
 	config.cpp

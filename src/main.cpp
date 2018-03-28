@@ -2,6 +2,7 @@
 #include <QDebug>
 #include "tcpserver.h"
 #include "tcpsocket.h"
+#include "transactionhandler.h"
 #include "config.h"
 
 int main(int argc, char *argv[]){
@@ -17,7 +18,9 @@ int main(int argc, char *argv[]){
 
 	TcpSocket *socket = new TcpSocket();
 	
-	//Db *db = new Db();
+	Db *db = new Db();
+	TransactionHandler t(db);
+
 	//Config c(db);
 	//c.setValue("settingname", 25);
 	//qDebug() << "Value: " << c.getValue("settingname");
