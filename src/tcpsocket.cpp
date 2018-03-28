@@ -12,7 +12,7 @@ TcpSocket::TcpSocket(QObject *parent) :
 
 	printf("Connecting..\n");
 
-	m_socket->connectToHost("riyyi.com", 80);
+	m_socket->connectToHost("localhost", 1234);
 
 	if (!m_socket->waitForConnected(1000)) {
 		printf("Error: %s\n", m_socket->errorString().toUtf8().data());

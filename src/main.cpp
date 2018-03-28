@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include "tcpserver.h"
+#include "tcpsocket.h"
 
 
 
@@ -14,6 +15,8 @@ int main(int argc, char *argv[]){
 	}else{
 		qDebug() << "Server started.";
 	}
+
+	TcpSocket *socket = new TcpSocket();
 
 
 	/*Db *db = new Db();
