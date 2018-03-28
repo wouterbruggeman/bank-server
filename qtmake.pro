@@ -19,7 +19,8 @@ HEADERS += \
 	log.h \
 	tcpserver.h \
 	tcpsocket.h \
-	transaction.h
+	transaction.h \
+	config.h
 SOURCES += \
 	main.cpp \
 	db.cpp \
@@ -27,4 +28,5 @@ SOURCES += \
 	log.cpp \
 	tcpserver.cpp \
 	tcpsocket.cpp \
-	transaction.cpp
+	transaction.cpp \
+	config.cpp

@@ -2,8 +2,7 @@
 #include <QDebug>
 #include "tcpserver.h"
 #include "tcpsocket.h"
-
-
+#include "config.h"
 
 int main(int argc, char *argv[]){
 	QCoreApplication app(argc, argv);
@@ -17,16 +16,18 @@ int main(int argc, char *argv[]){
 	}
 
 	TcpSocket *socket = new TcpSocket();
-
-
-	/*Db *db = new Db();
+	
+	//Db *db = new Db();
+	//Config c(db);
+	//c.setValue("settingname", 25);
+	//qDebug() << "Value: " << c.getValue("settingname");
 
 	// Log *log = new Log();
 	// log->newLog(Log::LOGIN, "test log", 1);
 
 	// Iban *iban = new Iban();
 	// printf("%d\n", iban->isValid("nl43 INGB 0756 7136 09"));
-	// printf("%d\n", iban->calculateCheckDigit("nl", "INgb 0756 7136 09"));*/
+	// printf("%d\n", iban->calculateCheckDigit("nl", "INgb 0756 7136 09"));
 
 	return app.exec();
 }

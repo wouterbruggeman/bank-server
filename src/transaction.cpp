@@ -9,8 +9,8 @@ Transaction::Transaction(Db *databasePtr){
 
 bool Transaction::setToIban(QString iban){
 	Iban *validator = new Iban();
-	
 	validator->format(iban);
+
 	if(validator->isValid(iban)){
 		this->toIban = iban;
 		return true;
@@ -32,6 +32,7 @@ bool Transaction::setFromIban(QString iban){
 bool Transaction::setUserId(int id){
 	QSqlQuery query = database->q("SELECT COUNT(id) FROM user WHERE id = ?",
 			{this->userId});
+	query.exec();
 	if(!query.isActive()){
 		return false;
 	}
