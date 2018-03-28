@@ -14,15 +14,15 @@ VPATH += ./src/
 QT = core sql network
 
 HEADERS += \
-	db.h\
-	iban.h\
-	log.h\
-	tcpserver.h\
+	db.h \
+	iban.h \
+	log.h \
+	tcpserver.h \
 	tcpsocket.h
 SOURCES += \
-	main.cpp\
-	db.cpp\
-	iban.cpp\
-	log.cpp\
-	tcpserver.cpp\
-	tcpsocket.h
+	main.cpp \
+	db.cpp \
+	iban.cpp \
+	log.cpp \
+	tcpserver.cpp \
+	tcpsocket.cpp

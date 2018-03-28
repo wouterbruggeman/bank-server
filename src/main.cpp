@@ -1,6 +1,6 @@
 #include <QCoreApplication>
 #include <QDebug>
-#include "TCPServer.h"
+#include "tcpserver.h"
 
 
 

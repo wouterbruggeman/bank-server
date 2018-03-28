@@ -1,33 +1,43 @@
 #include "tcpsocket.h"
 
-TCPSocket::TCPSocket(QObject *parent) :
+TcpSocket::TcpSocket(QObject *parent) :
 	QObject(parent)
 {
+	m_socket = new QTcpSocket(this);
+
+	connect(m_socket, &QTcpSocket::connected, this, &TcpSocket::connected);
+	connect(m_socket, &QTcpSocket::disconnected, this, &TcpSocket::disconnected);
+	connect(m_socket, &QTcpSocket::bytesWritten, this, &TcpSocket::bytesWritten);
+	connect(m_socket, &QTcpSocket::readyRead, this, &TcpSocket::readyRead);
+
 	printf("Connecting..\n");
-	this->connectToHost("localhost", 1234);
-	if (!this->waitForConnected(1000)) {
-		printf("Error: %s\n", this->errorString().toUtf8().data());
+
+	m_socket->connectToHost("riyyi.com", 80);
+
+	if (!m_socket->waitForConnected(1000)) {
+		printf("Error: %s\n", m_socket->errorString().toUtf8().data());
 	}
 }
 
-TCPSocket::~TCPSocket() {
+TcpSocket::~TcpSocket() {
+	delete m_socket;
 }
 
-void TCPSocket::connected() {
+void TcpSocket::connected() {
 	printf("Connected\n");
 
-	this->write("Hello there.");
+	m_socket->write("HEAD / HTTP/1.0\r\n\r\n");
 }
 
-void TCPSocket::disconnected() {
+void TcpSocket::disconnected() {
 	printf("Disconnected\n");
 }
 
-void TCPSocket::bytesWritten(qint64 bytes) {
+void TcpSocket::bytesWritten(qint64 bytes) {
 	printf("Bytes written: %lld\n", bytes);
 }
 
-void TCPSocket::readyRead() {
-	printf("Reading...\n%s\n", this->readAll().data());
+void TcpSocket::readyRead() {
+	printf("Reading...\n%s\n", m_socket->readAll().data());
 }
 
