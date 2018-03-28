@@ -2,20 +2,31 @@
 
 #include <QSqlQuery>
 #include "iban.h"
-#include <QDebug>
 
 Transaction::Transaction(Db *databasePtr){
 	database = databasePtr;
 }
 
 bool Transaction::setToIban(QString iban){
-	this->toIban = iban;			//TODO: Validate and format this!
-	return true;
+	Iban *validator = new Iban();
+	
+	validator->format(iban);
+	if(validator->isValid(iban)){
+		this->toIban = iban;
+		return true;
+	}
+	return false;
 }
 
 bool Transaction::setFromIban(QString iban){
-	this->fromIban = iban;			//TODO: Validate and format this!
-	return true;
+	Iban *validator = new Iban();
+	validator->format(iban);
+
+	if(validator->isValid(iban)){
+		this->fromIban = iban;
+		return true;
+	}
+	return false;
 }
 
 bool Transaction::setUserId(int id){
