@@ -1,1 +1,2 @@
-INSERT INTO config (setting,value) VALUES('transaction_delay', 5000);
+INSERT INTO config (setting,value) VALUES('transaction_delay', 1000);
+INSERT INTO config (setting,value) VALUES('iban_prefix', 'BANQ');
