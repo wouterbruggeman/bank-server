@@ -1,5 +1,6 @@
 #include <QCoreApplication>
 #include <QDebug>
+#include <QThread>
 
 #include "tcpserver.h"
 #include "tcpsocket.h"
@@ -7,11 +8,12 @@
 int main(int argc, char *argv[]){
 	QCoreApplication app(argc, argv);
 
+#ifdef DEBUG
+	printf("Main thread: %p\n", QThread::currentThreadId());
+#endif
+
 	TcpServer *server = new TcpServer();
 	server->start(1234);
-
-	// TcpSocket *socket = new TcpSocket();
-
 
 	/*Db *db = new Db();
 

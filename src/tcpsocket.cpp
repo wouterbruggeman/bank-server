@@ -1,56 +1,40 @@
-#include <QThreadPool>
+#include <QThread>
 
 #include "tcpsocket.h"
-#include "tcptask.h"
+#include "usersession.h"
+
+QThread *TcpSocket::m_thread = new QThread;
 
 TcpSocket::TcpSocket(QObject *parent) :
 	QObject(parent)
 {
-	QThreadPool::globalInstance()->setMaxThreadCount(2);
+	m_thread->start();
 }
 
 TcpSocket::~TcpSocket() {
 	delete m_socket;
+	delete m_userSession;
 }
 
 void TcpSocket::setSocket(qintptr descriptor) {
 	m_socket = new QTcpSocket(this);
 
-	connect(m_socket, &QTcpSocket::connected, this, &TcpSocket::connected);
 	connect(m_socket, &QTcpSocket::disconnected, this, &TcpSocket::disconnected);
-	connect(m_socket, &QTcpSocket::bytesWritten, this, &TcpSocket::bytesWritten);
 	connect(m_socket, &QTcpSocket::readyRead, this, &TcpSocket::readyRead);
 
 	m_socket->setSocketDescriptor(descriptor);
 
+	m_userSession = new UserSession();
+	connect(this, &TcpSocket::signalSendData, m_userSession, &UserSession::slotReceiveData);
+	m_userSession->moveToThread(m_thread);
+
 	printf("Client connected..\n");
 }
 
-void TcpSocket::connected() {
-	printf("Connected\n");
-}
-
 void TcpSocket::disconnected() {
-	printf("Disconnected\n");
-}
-
-void TcpSocket::bytesWritten(qint64 bytes) {
-	printf("Bytes written: %lld\n", bytes);
+	printf("Client disconnected..\n");
 }
 
 void TcpSocket::readyRead() {
-	printf("Reading...\n%s\n", m_socket->readAll().data());
-
-	TcpTask *task = new TcpTask();
-	task->setAutoDelete(true);
-	connect(task, &TcpTask::signalResult, this, &TcpSocket::slotResult, Qt::QueuedConnection);
-	QThreadPool::globalInstance()->start(task);
-}
-
-void TcpSocket::slotResult(int number) {
-	printf("Task from task: %d\n", number);
-
-	QByteArray buffer;
-	buffer.append("Task from server: " + QString::number(number) + "\r\n");
-	m_socket->write(buffer);
+	emit signalSendData(m_socket->readAll());
 }

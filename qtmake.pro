@@ -19,7 +19,7 @@ HEADERS += \
 	log.h \
 	tcpserver.h \
 	tcpsocket.h \
-	tcptask.h
+	usersession.h
 SOURCES += \
 	main.cpp \
 	db.cpp \
@@ -27,4 +27,4 @@ SOURCES += \
 	log.cpp \
 	tcpserver.cpp \
 	tcpsocket.cpp \
-	tcptask.cpp
+	usersession.cpp

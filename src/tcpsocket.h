@@ -3,6 +3,8 @@
 
 #include <QTcpSocket>
 
+class UserSession;
+
 class TcpSocket : public QObject
 {
 	Q_OBJECT
@@ -13,16 +15,17 @@ public:
 	void setSocket(qintptr descriptor);
 
 signals:
+	void signalSendData(QByteArray);
 
 public slots:
-	void connected();
 	void disconnected();
-	void bytesWritten(qint64);
 	void readyRead();
-	void slotResult(int);
 
-protected:
+private:
 	QTcpSocket *m_socket;
+	UserSession *m_userSession;
+
+	static QThread *m_thread;
 
 };
 
