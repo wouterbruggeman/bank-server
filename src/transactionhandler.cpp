@@ -8,7 +8,7 @@ TransactionHandler::TransactionHandler(Db *databasePtr){
 
 	//Create a timer
 	timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(cycle()));
+	connect(timer, &QTimer::timeout, this, &TransactionHandler::cycle);
 
 	//Set the timer
 	Config c(databasePtr);
