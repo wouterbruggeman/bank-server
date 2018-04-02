@@ -20,6 +20,7 @@ signals:
 public slots:
 	void disconnected();
 	void readyRead();
+	void slotReceiveData(QByteArray);
 
 private:
 	QTcpSocket *m_socket;

@@ -11,5 +11,7 @@ UserSession::~UserSession() {
 }
 
 void UserSession::slotReceiveData(QByteArray data) {
-	printf("Received data:\n%s\n", data.data());
+	printf("Received from client: %s\n", data.trimmed().data());
+
+	emit signalSendData(data);
 }

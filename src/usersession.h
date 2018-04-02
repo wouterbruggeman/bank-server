@@ -12,6 +12,7 @@ public:
 	~UserSession();
 
 signals:
+	void signalSendData(QByteArray);
 
 public slots:
 	void slotReceiveData(QByteArray);

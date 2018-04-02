@@ -26,6 +26,7 @@ void TcpSocket::setSocket(qintptr descriptor) {
 
 	m_userSession = new UserSession();
 	connect(this, &TcpSocket::signalSendData, m_userSession, &UserSession::slotReceiveData);
+	connect(m_userSession, &UserSession::signalSendData, this, &TcpSocket::slotReceiveData);
 	m_userSession->moveToThread(m_thread);
 
 	printf("Client connected..\n");
@@ -37,4 +38,8 @@ void TcpSocket::disconnected() {
 
 void TcpSocket::readyRead() {
 	emit signalSendData(m_socket->readAll());
+}
+
+void TcpSocket::slotReceiveData(QByteArray data) {
+	m_socket->write("Received from server: " + data);
 }
