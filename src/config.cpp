@@ -1,11 +1,11 @@
 #include "config.h"
+#include "db.h"
 
-Config::Config(Db *databasePtr){
-	this->database = databasePtr;
+Config::Config(){
 }
 
 QVariant Config::getValue(QString setting){
-	QSqlQuery query = database->q("SELECT value FROM config WHERE setting = ?",{setting});
+	QSqlQuery query = Db::q("SELECT value FROM config WHERE setting = ?",{setting});
 	query.exec();
 	if(!query.isActive()){
 		return "";
@@ -20,6 +20,6 @@ QVariant Config::getValue(QString setting){
 void Config::setValue(QString setting, QVariant value){
 	QString sql = "UPDATE config SET value = ? WHERE setting = ?";
 
-	QSqlQuery query = database->q(sql, {value, setting});
+	QSqlQuery query = Db::q(sql, {value, setting});
 	query.exec();
 }

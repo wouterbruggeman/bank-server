@@ -6,8 +6,6 @@
 #include <QTimer>
 #include <QVector>
 
-#include "db.h"
-
 #define STATUS_PENDING 0
 #define STATUS_DONE 1
 
@@ -21,7 +19,7 @@ class TransactionHandler : public QObject{
 	Q_OBJECT
 
 	public:
-		TransactionHandler(Db *databasePtr);
+		explicit TransactionHandler(QObject *parent = 0);
 
 	public slots:
 		void cycle();
@@ -39,6 +37,5 @@ class TransactionHandler : public QObject{
 		int serverIterator = 0;
 		QString ibanPrefix;
 		QTimer *timer;
-		Db *database;
 };
 #endif

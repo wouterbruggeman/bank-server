@@ -1,10 +1,10 @@
 #include <QSqlQuery>
 
+#include "db.h"
 #include "iban.h"
 #include "transaction.h"
 
-Transaction::Transaction(Db *databasePtr){
-	database = databasePtr;
+Transaction::Transaction(){
 }
 
 bool Transaction::setToIban(QString iban){
@@ -30,7 +30,7 @@ bool Transaction::setFromIban(QString iban){
 }
 
 bool Transaction::setUserId(int id){
-	QSqlQuery query = database->q("SELECT COUNT(id) FROM user WHERE id = ?",
+	QSqlQuery query = Db::q("SELECT COUNT(id) FROM user WHERE id = ?",
 			{this->userId});
 	query.exec();
 	if(!query.isActive()){
@@ -55,7 +55,7 @@ bool Transaction::setAmount(int amount){
 }
 
 bool Transaction::accountHasEnoughBalance(){
-	QSqlQuery query = database->q("SELECT balance FROM account WHERE iban = ?",
+	QSqlQuery query = Db::q("SELECT balance FROM account WHERE iban = ?",
 			{this->fromIban});
 	if(!query.isActive()){
 		return false;
@@ -105,7 +105,7 @@ bool Transaction::addPending(){
 	QString sql = "INSERT INTO transaction (from_iban, to_iban, amount, \
 		status, date_time, user_id) VALUES (?,?,?,0,NOW(),?)";
 
-	QSqlQuery query = database->q(sql, {this->fromIban, this->toIban, this->amount,
+	QSqlQuery query = Db::q(sql, {this->fromIban, this->toIban, this->amount,
 			this->userId});
 	query.exec();
 

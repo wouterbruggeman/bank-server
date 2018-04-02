@@ -3,11 +3,9 @@
 
 #include <QString>
 
-#include "db.h"
-
 class Transaction{
 	public:
-		explicit Transaction(Db *databasePtr);
+		Transaction();
 		bool setToIban(QString iban);
 		bool setFromIban(QString iban);
 		bool setUserId(int id);
@@ -24,8 +22,6 @@ class Transaction{
 		QString fromIban;
 		int amount = 0;
 		bool submitted = false;
-
-		Db *database;
 };
 
 #endif

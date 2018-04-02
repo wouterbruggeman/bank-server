@@ -1,17 +1,18 @@
 #include <QDebug>
 
 #include "config.h"
+#include "db.h"
 #include "transactionhandler.h"
 
-TransactionHandler::TransactionHandler(Db *databasePtr){
-	database = databasePtr;
-
+TransactionHandler::TransactionHandler(QObject *parent) :
+	QObject(parent)
+{
 	//Create a timer
 	timer = new QTimer(this);
 	connect(timer, &QTimer::timeout, this, &TransactionHandler::cycle);
 
 	//Set the timer
-	Config c(databasePtr);
+	Config c;
 	int timerDelay = c.getValue("transaction_delay").toInt();
 	timer->start(timerDelay);
 
@@ -45,7 +46,7 @@ void TransactionHandler::receiveServerList(){
 
 	//Receive the server list
 	QString sql = "SELECT * from iban_ip_link";
-	QSqlQuery query = database->q(sql, {});
+	QSqlQuery query = Db::q(sql, {});
 	query.exec();
 	if(!query.isActive()){
 		return;
@@ -94,7 +95,7 @@ void TransactionHandler::handleTransactions(server s){
 
 	//cycle through all transactions where the status is not accepted for the specified bank.
 	QString sql = "SELECT * FROM transactions WHERE to_iban LIKE '%?%' AND status <> ?";
-	QSqlQuery query = database->q(sql, {s.prefix, STATUS_DONE});
+	QSqlQuery query = Db::q(sql, {s.prefix, STATUS_DONE});
 	query.exec();
 	while(query.next()){
 		//Internal transaction.
@@ -111,7 +112,7 @@ void TransactionHandler::handleTransactions(server s){
 void TransactionHandler::internalTransfer(QString from_iban, QString to_iban, int amount){
 	//If the account has enough balance
 	QString sql = "SELECT balance FROM account WHERE iban = ?";
-	QSqlQuery query = database->q(sql, {from_iban});
+	QSqlQuery query = Db::q(sql, {from_iban});
 	query.exec();
 	if(!query.isActive()){
 		return;
@@ -124,7 +125,7 @@ void TransactionHandler::internalTransfer(QString from_iban, QString to_iban, in
 		//Transfer the money
 		QString sql = "UPDATE account SET balance = (balance - ?) WHERE iban = ?;\
 			       UPDATE account SET balance = (balance + ?) WHERE iban = ?;";
-		QSqlQuery query = database->q(sql, {amount, from_iban, amount, to_iban});
+		QSqlQuery query = Db::q(sql, {amount, from_iban, amount, to_iban});
 		query.exec();
 	}
 	return;
@@ -132,6 +133,6 @@ void TransactionHandler::internalTransfer(QString from_iban, QString to_iban, in
 
 void TransactionHandler::setTransactionStatus(int transaction, int status){
 	QString sql = "UPDATE transaction SET status = ? WHERE id = ?";
-	QSqlQuery query = database->q(sql, {status, transaction});
+	QSqlQuery query = Db::q(sql, {status, transaction});
 	query.exec();
 }
