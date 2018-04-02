@@ -10,21 +10,27 @@ CONFIG(release, debug|release) {
 
 TEMPLATE = app
 TARGET = server
-VPATH += ./src/
+VPATH += ./src
+
 QT = core sql network
 
 HEADERS += \
+	config.h \
 	db.h \
 	iban.h \
 	log.h \
 	tcpserver.h \
 	tcpsocket.h \
+	transaction.h \
+	transactionhandler.h \
 	usersession.h
-SOURCES += \
-	main.cpp \
+SOURCES += main.cpp \
+	config.cpp \
 	db.cpp \
 	iban.cpp \
 	log.cpp \
 	tcpserver.cpp \
 	tcpsocket.cpp \
+	transaction.cpp \
+	transactionhandler.cpp \
 	usersession.cpp

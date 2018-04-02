@@ -98,8 +98,8 @@ QSqlError Db::initDb() {
 	m_db.setHostName("localhost");
 	m_db.setPort(3306);
 	m_db.setDatabaseName("bank_server");
-	m_db.setUserName("root");
-	m_db.setPassword("");
+	m_db.setUserName("bank_server");
+	m_db.setPassword("!IU9347buaeHAIoje@jyg7");
 
     if (!m_db.open()) {
         return m_db.lastError();
