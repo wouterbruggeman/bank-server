@@ -2,15 +2,14 @@
 #define TRANSACTIONHANDLER_H
 
 #include <QObject>
-#include <QTimer>
 #include <QString>
+#include <QTimer>
 #include <QVector>
+
 #include "db.h"
 
 #define STATUS_PENDING 0
 #define STATUS_DONE 1
-
-
 
 struct server{
 	QString prefix;
@@ -26,7 +25,7 @@ class TransactionHandler : public QObject{
 
 	public slots:
 		void cycle();
-		
+
 	private:
 		//Functions
 		void receiveServerList();

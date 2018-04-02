@@ -1,9 +1,10 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "db.h"
 #include <QString>
 #include <QVariant>
+
+#include "db.h"
 
 class Config{
 	public:

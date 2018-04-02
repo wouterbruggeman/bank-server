@@ -1,6 +1,7 @@
-#include "transactionhandler.h"
-#include "config.h"
 #include <QDebug>
+
+#include "config.h"
+#include "transactionhandler.h"
 
 TransactionHandler::TransactionHandler(Db *databasePtr){
 	database = databasePtr;
@@ -8,7 +9,7 @@ TransactionHandler::TransactionHandler(Db *databasePtr){
 	//Create a timer
 	timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(cycle()));
-	
+
 	//Set the timer
 	Config c(databasePtr);
 	int timerDelay = c.getValue("transaction_delay").toInt();
@@ -16,7 +17,7 @@ TransactionHandler::TransactionHandler(Db *databasePtr){
 
 	//Set own iban prefix
 	ibanPrefix = c.getValue("iban_prefix").toString();
-	
+
 	receiveServerList();
 }
 
@@ -30,7 +31,7 @@ void TransactionHandler::cycle(){
 
 		//Reload the server list.
 		receiveServerList();
-		
+
 		//Handle transactions for our own server.
 		server s;
 		s.prefix = ibanPrefix;
@@ -118,7 +119,7 @@ void TransactionHandler::internalTransfer(QString from_iban, QString to_iban, in
 	if(!query.first()){
 		return;
 	}
-	
+
 	if(query.value(0) >= amount){
 		//Transfer the money
 		QString sql = "UPDATE account SET balance = (balance - ?) WHERE iban = ?;\

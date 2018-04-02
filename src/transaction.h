@@ -1,8 +1,9 @@
 #ifndef TRANSACTION_H
-#define TRANSACTION_H 
+#define TRANSACTION_H
+
+#include <QString>
 
 #include "db.h"
-#include <QString>
 
 class Transaction{
 	public:

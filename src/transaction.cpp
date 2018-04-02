@@ -1,7 +1,7 @@
-#include "transaction.h"
-
 #include <QSqlQuery>
+
 #include "iban.h"
+#include "transaction.h"
 
 Transaction::Transaction(Db *databasePtr){
 	database = databasePtr;
@@ -63,7 +63,7 @@ bool Transaction::accountHasEnoughBalance(){
 	if(!query.first()){
 		return false;
 	}
-	//If there is not enough money for the transaction.	
+	//If there is not enough money for the transaction.
 	if(query.value(0) < amount){
 		return false;
 	}
@@ -79,7 +79,7 @@ bool Transaction::accountsEqual(){
 
 bool Transaction::validate(){
 	if(this->accountsEqual()){
-		return false;		
+		return false;
 	}
 
 	if(!this->accountHasEnoughBalance()){
@@ -101,7 +101,7 @@ bool Transaction::addPending(){
 	}
 
 
-	
+
 	QString sql = "INSERT INTO transaction (from_iban, to_iban, amount, \
 		status, date_time, user_id) VALUES (?,?,?,0,NOW(),?)";
 
