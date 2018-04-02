@@ -4,9 +4,18 @@
 #include "db.h"
 #include "transactionhandler.h"
 
-TransactionHandler::TransactionHandler(QObject *parent) :
+TransactionHandler::TransactionHandler(QThread *thread, QObject *parent) :
 	QObject(parent)
 {
+	// Setup thread
+	this->moveToThread(thread);
+	connect(thread, &QThread::started, this, &TransactionHandler::process);
+	connect(this, &TransactionHandler::finished, thread, &QThread::quit);
+	connect(this, &TransactionHandler::finished, this, &TransactionHandler::deleteLater);
+	connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+}
+
+void TransactionHandler::process() {
 	//Create a timer
 	timer = new QTimer(this);
 	connect(timer, &QTimer::timeout, this, &TransactionHandler::cycle);

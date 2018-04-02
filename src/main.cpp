@@ -15,16 +15,14 @@ int main(int argc, char *argv[]){
 	printf("Main thread: %p\n", QThread::currentThreadId());
 #endif
 
+	Db *db = new Db;
+
 	TcpServer *server = new TcpServer();
 	server->start(1234);
 
 	QThread *transactionThread = new QThread;
+	TransactionHandler transactionHandler(transactionThread);
 	transactionThread->start();
-
-	Db *db = new Db;
-
-	// TransactionHandler transactionHandler;
-	// transactionHandler.moveToThread(transactionThread);
 
 	// Config c;
 	// c.setValue("settingname", 25);

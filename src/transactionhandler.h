@@ -19,9 +19,13 @@ class TransactionHandler : public QObject{
 	Q_OBJECT
 
 	public:
-		explicit TransactionHandler(QObject *parent = 0);
+		explicit TransactionHandler(QThread *thread, QObject *parent = 0);
+
+	signals:
+		void finished();
 
 	public slots:
+		void process();
 		void cycle();
 
 	private:
