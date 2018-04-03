@@ -15,6 +15,7 @@ VPATH += ./src
 QT = core sql network
 
 HEADERS += \
+	card.h \
 	config.h \
 	db.h \
 	iban.h \
@@ -23,8 +24,10 @@ HEADERS += \
 	tcpsocket.h \
 	transaction.h \
 	transactionhandler.h \
+	user.h \
 	usersession.h
 SOURCES += main.cpp \
+	card.cpp \
 	config.cpp \
 	db.cpp \
 	iban.cpp \
@@ -33,4 +36,5 @@ SOURCES += main.cpp \
 	tcpsocket.cpp \
 	transaction.cpp \
 	transactionhandler.cpp \
+	user.cpp \
 	usersession.cpp

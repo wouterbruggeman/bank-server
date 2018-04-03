@@ -9,7 +9,6 @@ class Config{
 		Config();
 		QVariant getValue(QString setting);
 		void setValue(QString setting, QVariant value);
-	private:
 };
 
 #endif
