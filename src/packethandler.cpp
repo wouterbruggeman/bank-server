@@ -2,24 +2,24 @@
 #include <QTimer>
 
 #include "tcpsocket.h"
-#include "usersession.h"
+#include "packethandler.h"
 
-UserSession::UserSession()
+PacketHandler::PacketHandler()
 {
 }
 
-UserSession::~UserSession() {
+PacketHandler::~PacketHandler() {
 	delete m_timer;
 }
 
-void UserSession::slotStart() {
+void PacketHandler::slotStart() {
 	m_timer = new QTimer(this);
 	m_timer->setInterval(15 * 60 * 1000);
-	connect(m_timer, &QTimer::timeout, this, &UserSession::slotTimeout);
+	connect(m_timer, &QTimer::timeout, this, &PacketHandler::slotTimeout);
 	m_timer->start();
 }
 
-void UserSession::slotReceiveData(QByteArray data) {
+void PacketHandler::slotReceiveData(QByteArray data) {
 	// Restart timer
 	m_timer->start();
 
@@ -31,7 +31,7 @@ void UserSession::slotReceiveData(QByteArray data) {
 	emit signalSendData(data);
 }
 
-void UserSession::slotTimeout() {
+void PacketHandler::slotTimeout() {
 	m_timer->stop();
 	emit signalTimeout();
 }

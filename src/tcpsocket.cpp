@@ -1,7 +1,7 @@
 #include <QThread>
 
 #include "tcpsocket.h"
-#include "usersession.h"
+#include "packethandler.h"
 
 QThread *TcpSocket::m_thread = new QThread;
 
@@ -14,7 +14,7 @@ TcpSocket::TcpSocket(QObject *parent) :
 TcpSocket::~TcpSocket() {
 	m_socket->close();
 	delete m_socket;
-	delete m_userSession;
+	delete m_packetHandler;
 }
 
 void TcpSocket::setSocket(qintptr descriptor) {
@@ -25,12 +25,12 @@ void TcpSocket::setSocket(qintptr descriptor) {
 
 	m_socket->setSocketDescriptor(descriptor);
 
-	m_userSession = new UserSession;
-	connect(this, &TcpSocket::signalStart, m_userSession, &UserSession::slotStart);
-	connect(this, &TcpSocket::signalSendData, m_userSession, &UserSession::slotReceiveData);
-	connect(m_userSession, &UserSession::signalSendData, this, &TcpSocket::slotReceiveData);
-	connect(m_userSession, &UserSession::signalTimeout, this, &TcpSocket::slotTimeout);
-	m_userSession->moveToThread(m_thread);
+	m_packetHandler = new PacketHandler;
+	connect(this, &TcpSocket::signalStart, m_packetHandler, &PacketHandler::slotStart);
+	connect(this, &TcpSocket::signalSendData, m_packetHandler, &PacketHandler::slotReceiveData);
+	connect(m_packetHandler, &PacketHandler::signalSendData, this, &TcpSocket::slotReceiveData);
+	connect(m_packetHandler, &PacketHandler::signalTimeout, this, &TcpSocket::slotTimeout);
+	m_packetHandler->moveToThread(m_thread);
 	emit signalStart();
 
 #ifdef DEBUG

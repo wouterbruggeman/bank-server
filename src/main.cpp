@@ -20,9 +20,9 @@ int main(int argc, char *argv[]){
 	TcpServer *server = new TcpServer();
 	server->start(1234);
 
-	QThread *transactionThread = new QThread;
-	TransactionHandler transactionHandler(transactionThread);
-	transactionThread->start();
+	// QThread *transactionThread = new QThread;
+	// TransactionHandler transactionHandler(transactionThread);
+	// transactionThread->start();
 
 	// Config c;
 	// c.setValue("settingname", 25);

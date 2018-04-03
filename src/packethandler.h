@@ -1,5 +1,5 @@
-#ifndef USERSESSION_H
-#define USERSESSION_H
+#ifndef PACKETHANDLER_H
+#define PACKETHANDLER_H
 
 #include <QObject>
 
@@ -7,13 +7,13 @@ class QTimer;
 
 class TcpSocket;
 
-class UserSession : public QObject
+class PacketHandler : public QObject
 {
 	Q_OBJECT
 
 public:
-	explicit UserSession();
-	~UserSession();
+	explicit PacketHandler();
+	~PacketHandler();
 
 signals:
 	void signalSendData(QByteArray);

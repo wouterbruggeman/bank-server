@@ -3,7 +3,7 @@
 
 #include <QTcpSocket>
 
-class UserSession;
+class PacketHandler;
 
 class TcpSocket : public QObject
 {
@@ -26,7 +26,7 @@ public slots:
 
 private:
 	QTcpSocket *m_socket;
-	UserSession *m_userSession;
+	PacketHandler *m_packetHandler;
 
 	static QThread *m_thread;
 
