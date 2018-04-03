@@ -1,13 +1,42 @@
-\documentclass[12pt, a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage{parskip}
+\documentclass[12pt]{article}
 
 \title{Bank protocol}
 \author{Wouter Bruggeman, Rick van Vonderen}
 \date{\today}
+
 \renewcommand{\contentsname}{Table of contents}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage{parskip}
+% Enable code formating package
+\usepackage{listings}
+\usepackage{color}
+
+%% Colors
+\definecolor{blue}{rgb}{0,0.6,1}
+\definecolor{dkgreen}{rgb}{0.3,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+
+\lstdefinestyle{cpp}{
+	language=C++,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{dkgreen},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
 
 \begin{document}
+
 \maketitle
 \newpage
 
@@ -15,15 +44,15 @@
 \newpage
 
 \section{Introduction}
-For this server we've made a TCP protocol.This protocol defines all requests
+For this server we've made a TCP protocol. This protocol defines all requests
 and responses for the server and client.\\
-Currently, there is no support for server to server communication. We'll add that later.\\
+Currently, there is no support for server to server communication. We'll add that later.
 \newpage
 
-\section{Protocol}
-\subsection{Block scheme}
-The protocol contains a few blocks of data. The blocks are defined below:\\
-\\
+\section{Protocol} \label{hfst:protocol}
+\subsection{Block scheme} \label{hfst:scheme}J:
+The protocol contains a few blocks of data. The blocks are defined below:
+
 For the requests we're using this scheme:\\
 \begin{tabular}{| p{2cm} | p{5cm} |}
 	\hline
@@ -43,11 +72,9 @@ For the response from the server we're using this scheme:\\
 	3 & Data \\ \hline
 \end{tabular}
 
-\newpage
-
-\subsection{Explanation of type}
+\subsection{Explanation of type} \label{hfst:type}
 The type block has a size of 1 byte. This byte defines the type of the data block.\\
-Type can contain one of the following:\\
+Type can contain one of the following:
 
 \begin{enumerate}
 	\setcounter{enumi}{-1}
@@ -70,15 +97,16 @@ Type can contain one of the following:\\
 All items in \textbf{bold} and suffixed with \_r are responses from the server.
 The other items are requests from the client.
 
-\subsection{Explanation of size}
+\subsection{Explanation of size} \label{hfst:size}
 The size byte contains the amount of bytes in the data block.\\
 The maximum number stored in a byte is 255. This way the data block
 cannot be larger than 255 bytes.\\ The total size of a request
 packet cannot be larger than 255 + 2 = 257 bytes.
 
-\subsection{Explanation of status}
-This byte will only be used in response packet wich are only send by the server.\\
-Status can contain one of the following:\\
+\subsection{Explanation of status} \label{hfst:status}
+This byte will only be used in response packet wich are only send by the server.
+
+Status can contain one of the following:
 \begin{itemize}
 	\item TIMEOUT (-2)
 	\item INVALID (-1)
@@ -86,40 +114,42 @@ Status can contain one of the following:\\
 	\item OK (1)
 \end{itemize}
 
-\subsection{Explanation of data}
+\subsection{Explanation of data} \label{hfst:data}
 The format of the data block is defined by the packet type, wich we'll describe below.
 
 \subsubsection{0: ping}
-Data[0] = Random byte.\\
+\begin{lstlisting}[style=cpp]
+Data[0] = (Random byte);
+\end{lstlisting}
 
 This is just a ping request. One of the many possible usecases could be latency testing.
 
 \subsubsection{1: ping\_r}
-Status = OK;
+Status = see \hyperref[hfst:status]{status};\\
 Data[0] = Data[0] from ping request + 1.
 
-\subsubsection{2: login\_request}
+\subsubsection{2: login}
 Data[0-11] = Card UID.\\
 Data[12-?24?] = Pincode in raw byte format(Not in char +48 display format)\\
 Pincode length has to be between 4 and 12.
 
-The card UID must be in hexadecimal format.\\
+The card UID must be in hexadecimal format.
 
 \subsubsection{3: login\_r}
-Status = TIMEOUT/INVALID/OK/FAIL\\
-Data[0] = Byte containing the amount of failed attempts.\\
-\\
+Status = see \hyperref[hfst:status]{status};\\
+Data[0] = Byte containing the amount of failed attempts.
+
 This response contains information about the login attempt.\\
 Every time the user fails to login, a counter will be incremented.
 After 3 failed attempts the card is blocked.
 
 \subsubsection{4: logout}
-Ask the server if we can logout.\\
-This request has no data.
+This request has no data.\\
+Ask the server if we can logout.
 
 \subsubsection{5: logout\_r}
-Respond to the logout request. Usually the status byte contains 'OK'.\\
-This request has no reply data.
+This request has no reply data.\\
+Respond to the logout request. Usually the status byte contains 'OK'.
 
 \subsubsection{6: account\_list}
 This request has no data.
@@ -127,39 +157,39 @@ This request has no data.
 \subsubsection{7: account\_list\_r}
 Data contains account\_blocks for iban numbers including the balance and type.\\
 The size of an account\_block is 43 bytes.
-Every account\_block is added after the other in the data block.\\
+Every account\_block is added after the other in the data block.
 
 To calculate the amount of accounts the user has, use the following formula:\\
 amount = size / 43;\\
-Size is the size of the packet.\\
-\\
+Size is the size of the packet.
+
 Account\_block[0-33] = Iban\\
 Account\_block[34-41] = Balance\\
-Account\_block[42] = Type\\
+Account\_block[42] = Type
 
 \subsubsection{8: user\_data}
-Request information about the currently logged in user.\\
-This request has no data.
+This request has no data.\\
+Request information about the currently logged in user.
 
 \subsubsection{9: user\_data\_r}
 This response contains information about the currently logged in user.\\
 Firstname and Lastname are char arrays, Year is an integer of 8 bytes.\\
-Day and month are unsigned bytes.\\
-\\
+Day and month are unsigned bytes.
+
 Data[0-99] = Fistname\\
 Data[100-199] = Lastname\\
 Data[200-204] = Year\\
 Data[205] = Month\\
-Data[206] = Day\\
+Data[206] = Day
 
 \subsubsection{10: pageview}
-Data[0] = Page\\
-\\
+Data[0] = Page
+
 Page contains the index(byte) of the current page.\\
 More information about pages will be added soon.
 
 \subsubsection{11: pageview\_r}
-This response has no data.
+This request has no reply data.
 
 \subsubsection{12: transaction}
 Request a transaction.\\
@@ -167,14 +197,14 @@ Amount has a size of 8 bytes and is unsigned.
 
 Data[0-33] = From Iban\\
 Data[34-67] = To Iban\\
-Data[68-75] = Amount\\
+Data[68-75] = Amount
 
 \subsubsection{13: transaction\_r}
-This response contains information about the requested transaction.\\
-\\
+This response contains information about the requested transaction.
+
 Status = TIMEOUT/INVALID/OK/FAIL\\
-Data[0] = Fail reason\\
-\\
+Data[0] = Fail reason
+
 Fail reason can be:
 \begin{itemize}
 	\item 0: Not enough balance
