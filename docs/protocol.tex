@@ -67,8 +67,8 @@ For the response from the server we're using this scheme:\\
 	\hline
 	\textbf{Block nr.} & \textbf{Block name} \\ \hline
 	0 & Type \\ \hline
-	1 & Size \\ \hline
-	2 & Status \\ \hline
+	1 & Status \\ \hline
+	2 & Size \\ \hline
 	3 & Data \\ \hline
 \end{tabular}
 
@@ -161,7 +161,7 @@ Every account\_block is added after the other in the data block.
 
 To calculate the amount of accounts the user has, use the following formula:\\
 amount = size / 43;\\
-Size is the size of the packet.
+Size of the data section of the packet.
 
 Account\_block[0-33] = Iban\\
 Account\_block[34-41] = Balance\\
