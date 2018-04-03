@@ -1,0 +1,141 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{parskip}
+
+\title{Bank protocol}
+\author{Wouter Bruggeman, Rick van Vonderen}
+\date{\today}
+\renewcommand{\contentsname}{Table of contents}
+
+\begin{document}
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+None!
+\newpage
+
+\section{Protcol}
+\subsection{Block scheme}
+Out protocol contains a few blocks. The blocks are defined below:\\
+\\
+For the requests we're using this scheme:\\
+0: Type\\
+1: Size\\
+2: Data\\
+
+For the response from the server we're usign this scheme:\\
+0: Type\\
+1: Size\\
+2: Status\\
+3: Data\\
+
+Size defines the size of the data block in bytes.
+
+\newpage
+
+\subsection{Explanation of type}
+The type block has a size of 1 byte. This byte is defined in the protocol header as
+an enum.\\\\
+This enum has the following options:\\
+0: ping\\
+\textbf{1: ping\_r}\\
+2: login\_request\\
+\textbf{3: login\_r}\\
+4: logout\\
+\textbf{5: logout\_r}\\
+6: account\_list\\
+\textbf{7: account\_list\_r}\\
+8: user\_data\\
+\textbf{9: user\_data\_r}\\
+10: pageview\\
+\textbf{11: pageview\_r}\\
+12: transaction\\
+\textbf{transaction\_r}\\
+
+All items in \textbf{bold} are responses. The other items are requests from the client.
+
+\subsection{Explanation of status}
+Status can be:\\
+\begin{itemize}
+	\item TIMEOUT (-2)
+	\item INVALID (-1)
+	\item FAIL (0)
+	\item OK (1)
+\end{itemize}
+
+\subsection{Explanation of data}
+The format of the data blocks is defined by the packet type.\\
+
+\subsubsection{0: ping}
+Data[0] = Random byte.\\
+
+Ping request. First byte in data block has to be returned from the server after adding 1.
+Size must be 1.
+
+\subsubsection{1: ping\_r}
+Status = OK;
+Data[0] = Data[0] from ping request + 1.
+
+\subsubsection{2: login\_request}
+Data[0-11] = Card UID.\\
+Data[12-?24?] = Pincode in raw byte format(Not in char +48 display format)\\
+Pincode length has to be between 4 and 12.
+
+\subsubsection{3: login\_r}
+Status = TIMEOUT/INVALID/OK/FAIL
+Data[0] = Byte containing the failed attempts when status == FAIL.
+
+\subsubsection{4: logout}
+This request has no data.
+
+\subsubsection{5: logout\_r}
+This request has no reply data.
+
+\subsubsection{6: account\_list}
+This request has no data.
+
+\subsubsection{7: account\_list\_r}
+Data contains blocks for iban numbers including the balance and type.
+Block is 43 in length:\\
+Block[0-33] = IBAN\\
+Block[34-41] = Balance\\
+Block[42] = Type\\
+
+\subsubsection{8: user\_data}
+This request has no data.
+
+\subsubsection{9: user\_data\_r}
+Data[0-99] = Fistname\\
+Data[100-199] = Lastname\\
+Data[200-204] = Year\\
+Data[205] = Month\\
+Data[206] = Day\\
+
+\subsubsection{10: pageview}
+Data[0] = PAGE(int)
+
+\subsubsection{11: pageview\_r}
+This response has no data.
+
+\subsubsection{12: transaction}
+Data[0-33] = From Iban\\
+Data[34-67] = To Iban\\
+Data[68-75] = Amount\\
+
+\subsubsection{13: transaction\_r}
+Status = TIMEOUT/INVALID/OK/FAIL
+Data[0] = Fail reason
+
+Fail reason can be:
+\begin{itemize}
+	\item 0: Not enough balance
+	\item 1: To Iban invalid
+	\item 2: From Iban invalid
+	\item 3: Both Ibans invalid
+\end{itemize}
+
+\end{document}
