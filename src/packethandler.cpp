@@ -1,8 +1,9 @@
 #include <QThread>
 #include <QTimer>
 
-#include "tcpsocket.h"
+#include "config.h"
 #include "packethandler.h"
+#include "tcpsocket.h"
 
 PacketHandler::PacketHandler()
 {
@@ -14,7 +15,7 @@ PacketHandler::~PacketHandler() {
 
 void PacketHandler::slotStart() {
 	m_timer = new QTimer(this);
-	m_timer->setInterval(15 * 60 * 1000);
+	m_timer->setInterval(Config::getValue("session_timeout").toInt());
 	connect(m_timer, &QTimer::timeout, this, &PacketHandler::slotTimeout);
 	m_timer->start();
 }

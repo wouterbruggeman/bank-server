@@ -1,7 +1,7 @@
 #include <QThread>
 
-#include "tcpsocket.h"
 #include "packethandler.h"
+#include "tcpsocket.h"
 
 QThread *TcpSocket::m_thread = new QThread;
 
