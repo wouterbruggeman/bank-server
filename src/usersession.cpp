@@ -14,7 +14,7 @@ UserSession::~UserSession() {
 
 void UserSession::slotStart() {
 	m_timer = new QTimer(this);
-	m_timer->setInterval(1000);
+	m_timer->setInterval(15 * 60 * 1000);
 	connect(m_timer, &QTimer::timeout, this, &UserSession::slotTimeout);
 	m_timer->start();
 }
