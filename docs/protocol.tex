@@ -15,51 +15,70 @@
 \newpage
 
 \section{Introduction}
-None!
+For this server we've made a TCP protocol.This protocol defines all requests
+and responses for the server and client.\\
+Currently, there is no support for server to server communication. We'll add that later.\\
 \newpage
 
-\section{Protcol}
+\section{Protocol}
 \subsection{Block scheme}
-Out protocol contains a few blocks. The blocks are defined below:\\
+The protocol contains a few blocks of data. The blocks are defined below:\\
 \\
 For the requests we're using this scheme:\\
-0: Type\\
-1: Size\\
-2: Data\\
+\begin{tabular}{| p{2cm} | p{5cm} |}
+	\hline
+	\textbf{Byte nr.} & \textbf{Block name} \\ \hline
+	0 & Type \\ \hline
+	1 & Size \\ \hline
+	2 & Data \\ \hline
+\end{tabular}
 
-For the response from the server we're usign this scheme:\\
-0: Type\\
-1: Size\\
-2: Status\\
-3: Data\\
-
-Size defines the size of the data block in bytes.
+For the response from the server we're using this scheme:\\
+\begin{tabular}{| p{2cm} | p{5cm} |}
+	\hline
+	\textbf{Byte nr.} & \textbf{Block name} \\ \hline
+	0 & Type \\ \hline
+	1 & Size \\ \hline
+	2 & Status \\ \hline
+	3 & Data \\ \hline
+\end{tabular}
 
 \newpage
 
 \subsection{Explanation of type}
-The type block has a size of 1 byte. This byte is defined in the protocol header as
-an enum.\\\\
-This enum has the following options:\\
-0: ping\\
-\textbf{1: ping\_r}\\
-2: login\_request\\
-\textbf{3: login\_r}\\
-4: logout\\
-\textbf{5: logout\_r}\\
-6: account\_list\\
-\textbf{7: account\_list\_r}\\
-8: user\_data\\
-\textbf{9: user\_data\_r}\\
-10: pageview\\
-\textbf{11: pageview\_r}\\
-12: transaction\\
-\textbf{transaction\_r}\\
+The type block has a size of 1 byte. This byte defines the type of the data block.\\
+Type can contain one of the following:\\
 
-All items in \textbf{bold} are responses. The other items are requests from the client.
+\begin{enumerate}
+	\setcounter{enumi}{-1}
+	\item ping
+	\item \textbf{ping\_r}
+	\item login\_request
+	\item \textbf{login\_r}
+	\item logout
+	\item \textbf{logout\_r}
+	\item account\_list
+	\item \textbf{account\_list\_r}
+	\item user\_data
+	\item \textbf{user\_data\_r}
+	\item pageview
+	\item \textbf{pageview\_r}
+	\item transaction
+	\item \textbf{transaction\_r}
+\end{enumerate}
+
+All items in \textbf{bold} and suffixed with \_r are responses from the server.
+The other items are requests from the client.
+
+\subsection{Explanation of size}
+The size byte contains the amount of bytes in the data block.\\
+The maximum number stored in a byte is 255. This way the data block
+cannot be larger than 255 bytes.\\ The total size of a request
+packet cannot be larger than 255 + 2 = 257 bytes.
 
 \subsection{Explanation of status}
-Status can be:\\
+This byte will only be used in response packet wich are only send by the server.\\
+Status can contain one of the following:\\
 \begin{itemize}
 	\item TIMEOUT (-2)
 	\item INVALID (-1)
@@ -68,13 +87,12 @@ Status can be:\\
 \end{itemize}
 
 \subsection{Explanation of data}
-The format of the data blocks is defined by the packet type.\\
+The format of the data block is defined by the packet type, wich we'll describe below.
 
 \subsubsection{0: ping}
 Data[0] = Random byte.\\
 
-Ping request. First byte in data block has to be returned from the server after adding 1.
-Size must be 1.
+This is just a ping request. One of the many possible usecases could be latency testing.
 
 \subsubsection{1: ping\_r}
 Status = OK;
@@ -85,30 +103,49 @@ Data[0-11] = Card UID.\\
 Data[12-?24?] = Pincode in raw byte format(Not in char +48 display format)\\
 Pincode length has to be between 4 and 12.
 
+The card UID must be in hexadecimal format.\\
+
 \subsubsection{3: login\_r}
-Status = TIMEOUT/INVALID/OK/FAIL
-Data[0] = Byte containing the failed attempts when status == FAIL.
+Status = TIMEOUT/INVALID/OK/FAIL\\
+Data[0] = Byte containing the amount of failed attempts.\\
+\\
+This response contains information about the login attempt.\\
+Every time the user fails to login, a counter will be incremented.
+After 3 failed attempts the card is blocked.
 
 \subsubsection{4: logout}
+Ask the server if we can logout.\\
 This request has no data.
 
 \subsubsection{5: logout\_r}
+Respond to the logout request. Usually the status byte contains 'OK'.\\
 This request has no reply data.
 
 \subsubsection{6: account\_list}
 This request has no data.
 
 \subsubsection{7: account\_list\_r}
-Data contains blocks for iban numbers including the balance and type.
-Block is 43 in length:\\
-Block[0-33] = IBAN\\
-Block[34-41] = Balance\\
-Block[42] = Type\\
+Data contains account\_blocks for iban numbers including the balance and type.\\
+The size of an account\_block is 43 bytes.
+Every account\_block is added after the other in the data block.\\
+
+To calculate the amount of accounts the user has, use the following formula:\\
+amount = size / 43;\\
+Size is the size of the packet.\\
+\\
+Account\_block[0-33] = Iban\\
+Account\_block[34-41] = Balance\\
+Account\_block[42] = Type\\
 
 \subsubsection{8: user\_data}
+Request information about the currently logged in user.\\
 This request has no data.
 
 \subsubsection{9: user\_data\_r}
+This response contains information about the currently logged in user.\\
+Firstname and Lastname are char arrays, Year is an integer of 8 bytes.\\
+Day and month are unsigned bytes.\\
+\\
 Data[0-99] = Fistname\\
 Data[100-199] = Lastname\\
 Data[200-204] = Year\\
@@ -116,20 +153,28 @@ Data[205] = Month\\
 Data[206] = Day\\
 
 \subsubsection{10: pageview}
-Data[0] = PAGE(int)
+Data[0] = Page\\
+\\
+Page contains the index(byte) of the current page.\\
+More information about pages will be added soon.
 
 \subsubsection{11: pageview\_r}
 This response has no data.
 
 \subsubsection{12: transaction}
+Request a transaction.\\
+Amount has a size of 8 bytes and is unsigned.
+
 Data[0-33] = From Iban\\
 Data[34-67] = To Iban\\
 Data[68-75] = Amount\\
 
 \subsubsection{13: transaction\_r}
-Status = TIMEOUT/INVALID/OK/FAIL
-Data[0] = Fail reason
-
+This response contains information about the requested transaction.\\
+\\
+Status = TIMEOUT/INVALID/OK/FAIL\\
+Data[0] = Fail reason\\
+\\
 Fail reason can be:
 \begin{itemize}
 	\item 0: Not enough balance
