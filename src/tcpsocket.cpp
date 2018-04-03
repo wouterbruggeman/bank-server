@@ -12,6 +12,7 @@ TcpSocket::TcpSocket(QObject *parent) :
 }
 
 TcpSocket::~TcpSocket() {
+	m_socket->close();
 	delete m_socket;
 	delete m_userSession;
 }
@@ -24,16 +25,23 @@ void TcpSocket::setSocket(qintptr descriptor) {
 
 	m_socket->setSocketDescriptor(descriptor);
 
-	m_userSession = new UserSession();
+	m_userSession = new UserSession;
+	connect(this, &TcpSocket::signalStart, m_userSession, &UserSession::slotStart);
 	connect(this, &TcpSocket::signalSendData, m_userSession, &UserSession::slotReceiveData);
 	connect(m_userSession, &UserSession::signalSendData, this, &TcpSocket::slotReceiveData);
+	connect(m_userSession, &UserSession::signalTimeout, this, &TcpSocket::slotTimeout);
 	m_userSession->moveToThread(m_thread);
+	emit signalStart();
 
+#ifdef DEBUG
 	printf("Client connected..\n");
+#endif
 }
 
 void TcpSocket::disconnected() {
+#ifdef DEBUG
 	printf("Client disconnected..\n");
+#endif
 }
 
 void TcpSocket::readyRead() {
@@ -42,4 +50,11 @@ void TcpSocket::readyRead() {
 
 void TcpSocket::slotReceiveData(QByteArray data) {
 	m_socket->write("Received from server: " + data);
+}
+
+void TcpSocket::slotTimeout() {
+#ifdef DEBUG
+	printf("Client timed out..\n");
+#endif
+	delete this;
 }

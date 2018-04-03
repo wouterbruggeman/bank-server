@@ -15,12 +15,14 @@ public:
 	void setSocket(qintptr descriptor);
 
 signals:
+	void signalStart();
 	void signalSendData(QByteArray);
 
 public slots:
 	void disconnected();
 	void readyRead();
 	void slotReceiveData(QByteArray);
+	void slotTimeout();
 
 private:
 	QTcpSocket *m_socket;
