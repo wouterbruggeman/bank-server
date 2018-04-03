@@ -21,12 +21,11 @@ void TransactionHandler::process() {
 	connect(timer, &QTimer::timeout, this, &TransactionHandler::cycle);
 
 	//Set the timer
-	Config c;
-	int timerDelay = c.getValue("transaction_delay").toInt();
+	int timerDelay = Config::getValue("transaction_delay").toInt();
 	timer->start(timerDelay);
 
 	//Set own iban prefix
-	ibanPrefix = c.getValue("iban_prefix").toString();
+	ibanPrefix = Config::getValue("iban_prefix").toString();
 
 	receiveServerList();
 }

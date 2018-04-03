@@ -7,8 +7,8 @@
 class Config{
 	public:
 		Config();
-		QVariant getValue(QString setting);
-		void setValue(QString setting, QVariant value);
+		static QVariant getValue(QString setting);
+		static void setValue(QString setting, QVariant value);
 	private:
 };
 
