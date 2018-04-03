@@ -1,8 +1,6 @@
 #include "card.h"
 #include "db.h"
 
-//#include <QVariant>
-
 Card::Card(){
 
 }
@@ -50,9 +48,10 @@ bool Card::hasAccess(){
 	return this->accessGranted;
 }
 
-/*User Card::getOwner(){
-
-}*/
+User Card::getOwner(){
+	User user(this->userId);
+	return user;
+}
 
 void Card::setFailedLoginAttempts(char amount){
 	QSqlQuery query = Db::q("UPDATE card SET failed_login_attempts = ? WHERE uid = ?",
