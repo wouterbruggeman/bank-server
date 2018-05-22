@@ -3,8 +3,6 @@
 
 #include <QByteArray>
 
-#include "user.h"
-
 #define MAX_FAILED_ATTEMPTS 3
 
 class Card{
@@ -15,7 +13,8 @@ class Card{
 		bool authenticate();
 		bool hasAccess();
 		char getFailedLoginAttempts();
-		User getOwner();
+		int getOwnerId();
+		QVector<QByteArray> getLinkedAccounts();
 
 	private:
 		void setFailedLoginAttempts(char amount);

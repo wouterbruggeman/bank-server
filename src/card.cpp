@@ -48,15 +48,37 @@ bool Card::hasAccess(){
 	return this->accessGranted;
 }
 
-User Card::getOwner(){
-	User user(this->userId);
-	return user;
+int Card::getOwnerId(){
+	return this->userId;
 }
 
 void Card::setFailedLoginAttempts(char amount){
 	QSqlQuery query = Db::q("UPDATE card SET failed_login_attempts = ? WHERE uid = ?",
 			{amount, this->uid});
 	query.exec();
+}
+
+QVector<QByteArray> Card::getLinkedAccounts(){
+	QString sql = "SELECT a.iban, a.balance, a.type FROM account a \
+		INNER JOIN user_has_account uha ON uha.account_iban =  \
+		a.iban WHERE uha.user_id = ?";
+	QSqlQuery query = Db::q(sql, {this->userId});
+	query.exec();
+
+	if(!query.isActive()){
+		return;
+	}
+
+	//Implement part of protocol: Explanation of data '2.5.8', 7: account_list_r
+	QVector<QByteArray> vec = QVector();
+	while(query.next()){
+		QByteArray arr = QByteArray(43, 0);
+		arr.append(query.value(0));
+		arr.append(query.value(1);
+		arr.append(query.value(2));
+		vec.append(arr);
+	}
+	return vec;
 }
 
 void Card::clearFailedLoginAttempts(){
